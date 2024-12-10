@@ -1,14 +1,14 @@
-import React, { useEffect, useNavigate } from "react";
+import React, { useEffect } from "react";
 import { getCurrentUser } from "../../api/user";
 import { Layout, message, Menu, Flex, Spin, Alert } from "antd";
 import { ProfileOutlined, HomeOutlined, LoginOutlined, UserOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { hideLoader, showLoader } from "../../redux/slices/loaderSlice";
 import { setUser } from "../../redux/slices/userSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const { user } = useSelector((store) => store.users);
   const { loader } = useSelector((store) => store.loaders);
   const dispatch = useDispatch();
@@ -27,17 +27,18 @@ const ProtectedRoute = ({ children }) => {
       icon: <UserOutlined />,
       children: [
         {
-          label: (<span onClick={() => {
+          label: 'My Profile',
+          key: 'profile',
+          icon: <ProfileOutlined />,
+          onClick: () => {
             if (user.role === 'partner') {
               navigate('/partner');
             } else if (user.role === 'admin') {
               navigate('/admin');
             } else {
-              navigate('/user')
+              navigate('/user');
             }
-          }}>My Profile</span>),
-          key: 'profile',
-          icon: <ProfileOutlined />,
+          },
         },
         {
           label: (<Link to={'/login'}
