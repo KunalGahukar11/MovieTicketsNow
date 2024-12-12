@@ -3,12 +3,19 @@ import { Button, Divider, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useDispatch } from 'react-redux';
-import { openModal, setModal } from '../../redux/slices/modalSlice';
 import { getAllMovies } from '../../api/movie';
+import MovieModal from './MovieModal';
+import moment from 'moment';
+import { hideLoader, showLoader } from '../../redux/slices/loaderSlice';
+import DeleteModal from '../../components/DeleteModal/DeleteModal';
 
 const MoviesList = () => {
     const dispatch = useDispatch();
     const [moviesData, setMoviesData] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [formType, setFormType] = useState('add');
+    const [selectedMovie, setSelectedMovie] = useState(null);
 
     const columns = [
         {
@@ -32,16 +39,16 @@ const MoviesList = () => {
             key: 'title',
         },
         {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description'
+        },
+        {
             title: 'Release On',
             dataIndex: 'release_date',
             key: 'release_date',
             render: (text, data) => {
-                const releaseDate = new Date(text);
-                const day = releaseDate.getDate().toString().padStart(2, '0');
-                const month = (releaseDate.getMonth() + 1).toString().padStart(2, '0');
-                const year = releaseDate.getFullYear();
-
-                return `${day}/${month}/${year}`;
+                return moment(data.releaseDate).format("MM/DD/YYYY");
             }
         },
         {
@@ -53,6 +60,25 @@ const MoviesList = () => {
             }
         },
         {
+            title: 'Language',
+            dataIndex: 'language',
+            key: 'language',
+            render: (text, data) => {
+                return text.join(', ');
+            }
+        },
+        {
+            title: 'Duration',
+            dataIndex: 'duration',
+            key: 'duration',
+            render: (text, data) => {
+                const hour = Math.floor(text / 60);
+                const min = text % 60;
+
+                return `${hour}h:${min}m`
+            }
+        },
+        {
             title: 'Rating',
             dataIndex: 'rating',
             key: 'rating',
@@ -61,11 +87,18 @@ const MoviesList = () => {
             title: 'Actions',
             render: (text, data) => {
                 return (
-                    <div>
-                        <Button>
+                    <div className='flex gap-2 flex-col'>
+                        <Button color='primary' variant='outlined' onClick={() => {
+                            setIsModalOpen(true);
+                            setFormType('edit');
+                            setSelectedMovie(data);
+                        }}>
                             <EditOutlined />
                         </Button>
-                        <Button>
+                        <Button color='danger' variant='outlined' onClick={() => {
+                            setIsDeleteModalOpen(true)
+                            setSelectedMovie(data)
+                        }}>
                             <DeleteOutlined />
                         </Button>
                     </div>
@@ -75,16 +108,25 @@ const MoviesList = () => {
     ];
 
     const open = () => {
-        dispatch(setModal('movie'));
-        dispatch(openModal());
+        setIsModalOpen(true);
+        setSelectedMovie("");
+        setFormType('add');
+    };
+
+    const fetchMovies = async () => {
+        dispatch(showLoader());
+        const response = await getAllMovies();
+        const allMovies = response.data;
+
+        setMoviesData(
+            allMovies.map((movie) => {
+                return { ...movie, key: `movie${movie._id}` };
+            })
+        )
+        dispatch(hideLoader());
     };
 
     useEffect(() => {
-        const fetchMovies = async () => {
-            const data = await getAllMovies(); // Assuming getAllMovies is async
-            setMoviesData(data); // Set the fetched data in the state
-        };
-
         fetchMovies();
     }, []);
 
@@ -96,6 +138,27 @@ const MoviesList = () => {
                 </div>
                 <Divider></Divider>
                 <Table dataSource={moviesData} columns={columns}></Table>
+                {
+                    isModalOpen && (
+                        <MovieModal isModalOpen={isModalOpen}
+                            setIsModalOpen={setIsModalOpen}
+                            fetchMovies={fetchMovies}
+                            formType={formType}
+                            selectedMovie={selectedMovie}
+                            setSelectedMovie={selectedMovie}
+                        ></MovieModal>
+                    )
+                }
+                {
+                    isDeleteModalOpen && (
+                        <DeleteModal isDeleteModalOpen={isDeleteModalOpen}
+                            setIsDeleteModalOpen={setIsDeleteModalOpen}
+                            selectedMovie={selectedMovie}
+                            fetchMovies={fetchMovies}
+                            setSelectedMovie={setSelectedMovie}>
+                        </DeleteModal>
+                    )
+                }
             </section>
         </>
     )

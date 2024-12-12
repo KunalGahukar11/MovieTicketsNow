@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Input, Col, Row, message } from 'antd';
+import { Button, Form, Input, Col, Row, message, Radio } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { userRegister } from "../../api/user";
 
@@ -33,7 +33,7 @@ const Register = () => {
       </div>
       <div className="w-4/5">
         <Form layout="vertical" onFinish={onFinish}>
-          <Row gutter={16}>
+          <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
             {/* First Name */}
             <Col span={12}>
               <Form.Item
@@ -86,6 +86,15 @@ const Register = () => {
             ]}
           >
             <Input type="password" placeholder="Enter your password" />
+          </Form.Item>
+
+          <Form.Item label="Register as a Partner" name="role" htmlFor="role" rules={[{
+            required: true, message: 'Please select an option'
+          }]}>
+            <Radio.Group >
+              <Radio value="partner">Yes</Radio>
+              <Radio value="user">No</Radio>
+            </Radio.Group>
           </Form.Item>
 
           {/* Submit Button */}

@@ -15,10 +15,7 @@ const TheatreList = () => {
     return (
         <>
             <section>
-                <div className='flex justify-end pr-3'>
-                    <Button type='primary' icon={<PlusCircleOutlined></PlusCircleOutlined>} className='font-semibold' onClick={open}>Add Theater</Button>
-                </div>
-                <Divider></Divider>
+                Theater
             </section>
         </>
     )

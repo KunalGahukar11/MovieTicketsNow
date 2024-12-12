@@ -1,22 +1,13 @@
 import React from 'react'
-import { Tabs } from "antd";
-import { VideoCameraOutlined, ShopOutlined } from '@ant-design/icons';
-import MoviesList from './MoviesList';
-import TheatreList from './TheatreList';
+import { Tabs } from 'antd';
+import { ShopOutlined } from '@ant-design/icons';
 
-const Admin = () => {
+const index = () => {
     const tabItems = [
         {
             key: 1,
-            label: <span className='text-xl'>Movies</span>,
-            icon: <VideoCameraOutlined className='text-xl' />,
-            children: <MoviesList></MoviesList>
-        },
-        {
-            key: 2,
             label: <span className='text-xl'>Theaters</span>,
             icon: <ShopOutlined className='text-xl' />,
-            children: <TheatreList></TheatreList>
         }
     ];
 
@@ -24,7 +15,7 @@ const Admin = () => {
         <>
             <section className='m-3 border border-gray-300 rounded-md'>
                 <div className='flex justify-center items-center bg-slate-100'>
-                    <h1 className='text-2xl font-bold p-2'>Admin Panel</h1>
+                    <h1 className='text-2xl font-bold p-2'>Partner Page</h1>
                 </div>
                 <div className='p-3'>
                     <Tabs defaultActiveKey='1' items={tabItems}></Tabs>
@@ -34,4 +25,4 @@ const Admin = () => {
     )
 }
 
-export default Admin
+export default index
