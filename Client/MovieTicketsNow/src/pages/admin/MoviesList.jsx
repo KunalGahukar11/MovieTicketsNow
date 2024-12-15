@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Table } from "antd";
+import { Button, Divider, message, Spin, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { useDispatch } from 'react-redux';
-import { getAllMovies } from '../../api/movie';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteMovie, getAllMovies } from '../../api/movie';
 import MovieModal from './MovieModal';
 import moment from 'moment';
 import { hideLoader, showLoader } from '../../redux/slices/loaderSlice';
@@ -11,6 +11,7 @@ import DeleteModal from '../../components/DeleteModal/DeleteModal';
 
 const MoviesList = () => {
     const dispatch = useDispatch();
+    const { loader } = useSelector((store) => store.loaders);
     const [moviesData, setMoviesData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -87,7 +88,7 @@ const MoviesList = () => {
             title: 'Actions',
             render: (text, data) => {
                 return (
-                    <div className='flex gap-2 flex-col'>
+                    <div className='inline-flex flex-col gap-2'>
                         <Button color='primary' variant='outlined' onClick={() => {
                             setIsModalOpen(true);
                             setFormType('edit');
@@ -109,21 +110,30 @@ const MoviesList = () => {
 
     const open = () => {
         setIsModalOpen(true);
-        setSelectedMovie("");
+        setSelectedMovie(null);
         setFormType('add');
     };
 
     const fetchMovies = async () => {
-        dispatch(showLoader());
-        const response = await getAllMovies();
-        const allMovies = response.data;
+        try {
+            dispatch(showLoader());
+            const response = await getAllMovies();
+            if (response.success) {
+                const allMovies = response.data;
 
-        setMoviesData(
-            allMovies.map((movie) => {
-                return { ...movie, key: `movie${movie._id}` };
-            })
-        )
-        dispatch(hideLoader());
+                setMoviesData(
+                    allMovies.map((movie) => {
+                        return { ...movie, key: `movie${movie._id}` };
+                    })
+                )
+            } else {
+                message.error(response.error);
+            }
+        } catch (error) {
+            message.error("Something went wrong!");
+        } finally {
+            dispatch(hideLoader());
+        }
     };
 
     useEffect(() => {
@@ -137,7 +147,9 @@ const MoviesList = () => {
                     <Button type='primary' icon={<PlusCircleOutlined></PlusCircleOutlined>} className='font-semibold' onClick={open}>Add Movie</Button>
                 </div>
                 <Divider></Divider>
-                <Table dataSource={moviesData} columns={columns}></Table>
+                <Spin tip="Loading" size='large' spinning={loader}>
+                    <Table dataSource={moviesData} columns={columns}></Table>
+                </Spin>
                 {
                     isModalOpen && (
                         <MovieModal isModalOpen={isModalOpen}
@@ -153,9 +165,12 @@ const MoviesList = () => {
                     isDeleteModalOpen && (
                         <DeleteModal isDeleteModalOpen={isDeleteModalOpen}
                             setIsDeleteModalOpen={setIsDeleteModalOpen}
-                            selectedMovie={selectedMovie}
-                            fetchMovies={fetchMovies}
-                            setSelectedMovie={setSelectedMovie}>
+                            selectedItem={selectedMovie}
+                            fetchData={fetchMovies}
+                            deleteFunc={deleteMovie}
+                            setSelectedItem={setSelectedMovie}
+                            info="movie"
+                            deleteKey="movieId">
                         </DeleteModal>
                     )
                 }

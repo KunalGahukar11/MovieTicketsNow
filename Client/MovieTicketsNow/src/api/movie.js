@@ -49,6 +49,8 @@ export const deleteMovie = async (payload) => {
     return movie.data;
   } catch (error) {
     if (error.response) {
+      console.log(error);
+
       throw new Error(error.response.data.error);
     } else {
       throw new Error("Something went wrong. Please try again.");

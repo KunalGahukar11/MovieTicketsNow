@@ -1,34 +1,30 @@
 import React from 'react';
-import { Modal, Space, Button, Row, Col, message } from 'antd';
+import { Modal, Button, Row, Col, message } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { deleteMovie } from '../../api/movie';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader } from '../../redux/slices/loaderSlice';
 
-const DeleteModal = ({ isDeleteModalOpen, setIsDeleteModalOpen, selectedMovie, fetchMovies, setSelectedMovie }) => {
+const DeleteModal = (props) => {
     const dispatch = useDispatch();
+
     const handleCancel = () => {
-        setIsDeleteModalOpen(false);
+        props.setIsDeleteModalOpen(false);
     };
-    console.log(selectedMovie);
 
     const handleDelete = async () => {
         try {
             dispatch(showLoader());
-            if (selectedMovie) {
-                var movieId = selectedMovie._id;
-                console.log(selectedMovie._id);
+            const itemId = props.selectedItem._id;
+            const response = await props.deleteFunc({ [props.deleteKey]: itemId });
 
-            }
-            const response = await deleteMovie({ movieId });
             if (response.success) {
                 message.success(response.message);
-                fetchMovies();
+                props.fetchData();
             } else {
                 message.error(response.error);
             }
             dispatch(hideLoader());
-            setSelectedMovie(null);
+            props.setSelectedItem(null);
             handleCancel();
         } catch (error) {
             dispatch(hideLoader());
@@ -39,13 +35,13 @@ const DeleteModal = ({ isDeleteModalOpen, setIsDeleteModalOpen, selectedMovie, f
 
     return (
         <>
-            <Modal centered open={isDeleteModalOpen} onCancel={handleCancel} footer={null}>
+            <Modal centered open={props.isDeleteModalOpen} onCancel={handleCancel} footer={null}>
                 <div className='flex justify-start items-center gap-4 mb-6'>
                     <ExclamationCircleFilled className='text-yellow-400 text-3xl'></ExclamationCircleFilled>
-                    <h3 className='text-xl font-semibold'>Are you sure to delete this movie?</h3>
+                    <h3 className='text-xl font-semibold'>Are you sure to delete this {props.info}?</h3>
                 </div>
                 <p className="pb-3 ml-8">
-                    This action can't be undone and you'll lose this movie data.
+                    This action can't be undone and you'll lose this {props.info} data.
                 </p>
                 <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} className='m-5 mb-0 justify-end'>
                     <Col span={4}>

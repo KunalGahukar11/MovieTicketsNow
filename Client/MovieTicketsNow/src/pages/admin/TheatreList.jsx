@@ -1,6 +1,4 @@
 import React from 'react';
-import { Button, Divider } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
 import { useDispatch } from 'react-redux';
 import { openModal, setModal } from '../../redux/slices/modalSlice';
 

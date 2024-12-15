@@ -14,7 +14,7 @@ const Admin = () => {
         },
         {
             key: 2,
-            label: <span className='text-xl'>Theaters</span>,
+            label: <span className='text-xl'>Theatres</span>,
             icon: <ShopOutlined className='text-xl' />,
             children: <TheatreList></TheatreList>
         }
@@ -22,7 +22,7 @@ const Admin = () => {
 
     return (
         <>
-            <section className='m-3 border border-gray-300 rounded-md'>
+            <section className='m-3 border border-gray-300 rounded-md shadow-md'>
                 <div className='flex justify-center items-center bg-slate-100'>
                     <h1 className='text-2xl font-bold p-2'>Admin Panel</h1>
                 </div>

@@ -9,6 +9,7 @@ const Routing = () => {
     const RegisterPage = lazy(() => import('../pages/Register/index'));
     const AdminPage = lazy(() => import('../pages/admin/Admin'));
     const PartnerPage = lazy(() => import('../pages/partner/index'));
+    const ProtectedPage = lazy(() => import('../components/protectedRoute/ProtectedRoute'));
 
     return (
         <>
@@ -18,11 +19,11 @@ const Routing = () => {
                 </Flex>
             }>
                 <Routes>
-                    <Route path='/' element={<ProtectedRoute><HomePage></HomePage></ProtectedRoute>}></Route>
+                    <Route path='/' element={<ProtectedPage><HomePage></HomePage></ProtectedPage>}></Route>
                     <Route path='/login' element={<LoginPage></LoginPage>}></Route>
                     <Route path='/register' element={<RegisterPage></RegisterPage>}></Route>
-                    <Route path='/admin' element={<AdminPage></AdminPage>}></Route>
-                    <Route path='/partner' element={<PartnerPage></PartnerPage>}></Route>
+                    <Route path='/admin' element={<ProtectedPage><AdminPage></AdminPage></ProtectedPage>}></Route>
+                    <Route path='/partner' element={<ProtectedPage><PartnerPage></PartnerPage></ProtectedPage>}></Route>
                 </Routes>
             </Suspense>
         </>

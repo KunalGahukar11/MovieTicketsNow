@@ -1,13 +1,15 @@
 import React from 'react'
 import { Tabs } from 'antd';
 import { ShopOutlined } from '@ant-design/icons';
+import TheatreList from './TheatreList';
 
 const index = () => {
     const tabItems = [
         {
             key: 1,
-            label: <span className='text-xl'>Theaters</span>,
+            label: <span className='text-xl'>Theatres</span>,
             icon: <ShopOutlined className='text-xl' />,
+            children: <TheatreList></TheatreList>
         }
     ];
 
