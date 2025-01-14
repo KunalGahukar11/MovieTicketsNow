@@ -5,6 +5,7 @@ export const axiosInstance = axios.create({
     "Content-type": "application/json",
     Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
+  baseURL: "/",
 });
 
 // Add a request interceptor

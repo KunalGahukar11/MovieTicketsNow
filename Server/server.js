@@ -6,6 +6,7 @@ const userRouter = require("./Routes/userRoutes");
 const dbConnection = require("./Config/dbConfig");
 const movieRouter = require("./Routes/moviesRoutes");
 const theatreRouter = require("./Routes/theatreRoutes");
+const showRouter = require("./Routes/showsRoutes");
 
 dbConnection();
 
@@ -14,6 +15,7 @@ app.use(express.json()); // parse JSON bodies
 app.use("/api/users", userRouter);
 app.use("/api/movies", movieRouter);
 app.use("/api/theatres", theatreRouter);
+app.use("/api/shows", showRouter);
 
 app.listen(8082, (err) => {
   if (!err) {

@@ -14,7 +14,7 @@ const MovieModal = ({
     const [errorMsg, setErrorMsg] = useState(null);
 
     if (selectedMovie) {
-        selectedMovie.releaseDate = moment(selectedMovie.releaseDate).format(
+        selectedMovie.release_date = moment(selectedMovie.release_date).format(
             "YYYY-MM-DD"
         );
     }

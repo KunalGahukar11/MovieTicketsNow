@@ -1,7 +1,10 @@
 import React from "react";
+import ReleasedMovies from "./ReleasedMovies";
 
 const Home = () => {
-  return <div>Home</div>;
+  return <>
+    <ReleasedMovies></ReleasedMovies>
+  </>
 };
 
 export default Home;

@@ -49,7 +49,7 @@ const MoviesList = () => {
             dataIndex: 'release_date',
             key: 'release_date',
             render: (text, data) => {
-                return moment(data.releaseDate).format("MM/DD/YYYY");
+                return moment(data.release_date).format("MM/DD/YYYY");
             }
         },
         {

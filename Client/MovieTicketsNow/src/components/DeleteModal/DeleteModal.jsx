@@ -19,19 +19,27 @@ const DeleteModal = (props) => {
 
             if (response.success) {
                 message.success(response.message);
-                props.fetchData();
+
+                // Dynamically handle fetchData based on its arguments
+                if (props.fetchData.length > 0) {
+                    props.fetchData(itemId); // Pass itemId if fetchData expects arguments
+                } else {
+                    props.fetchData(); // Call without arguments if fetchData doesn't require any
+                }
             } else {
-                message.error(response.error);
+                message.error(response.message);
             }
             dispatch(hideLoader());
             props.setSelectedItem(null);
             handleCancel();
         } catch (error) {
             dispatch(hideLoader());
-            message.error(error.error);
+            console.log(error);
+            message.error("Something went wrong");
             handleCancel();
         }
     };
+
 
     return (
         <>

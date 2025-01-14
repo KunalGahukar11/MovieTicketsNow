@@ -27,7 +27,7 @@ const getAllTheatreForAdmin = async (req, res) => {
 
     res
       .status(200)
-      .json({ success: true, message: "All theatre", data: newTheatre });
+      .json({ success: true, message: "All theatre", data: theatre });
   } catch (error) {
     res.status(500).json({ success: false, error: "Internal server error" });
   }

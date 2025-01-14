@@ -28,6 +28,20 @@ export const getAllMovies = async () => {
   }
 };
 
+// get movie by id
+export const getMovieById = async (movieId) => {
+  try {
+    const movie = await axiosInstance.get(`/api/movies/by-movieId/${movieId}`);
+    return movie.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error);
+    } else {
+      throw new Error("Something went wrong. Please try again.");
+    }
+  }
+};
+
 // update movies
 export const updateMovie = async (payload) => {
   try {

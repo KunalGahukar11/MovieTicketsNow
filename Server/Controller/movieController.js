@@ -43,9 +43,10 @@ const getAllMovies = async (req, res) => {
   }
 };
 
+// get movie by id
 const getMovieById = async (req, res) => {
   try {
-    const movie = await movieModel.findById(req.body.movieId);
+    const movie = await movieModel.findById(req.params.movieId);
 
     if (!movie) {
       return res.status(404).json({
